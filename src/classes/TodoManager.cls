@@ -9,19 +9,21 @@ global with sharing class TodoManager {
     global static Id CreateTodo(
             String name,
             String comments,
-//            Datetime thisDateTime,
-            Boolean isCompleted,
+            Datetime thisDateTime,
             String priority,
             String purchase
     ) {
+
         Todo__c thisTodo = new Todo__c(
                 Name = name,
                 Comments__c = comments,
-//                DateTime__c = thisDateTime,
-                isCompleted__c = isCompleted,
+                DateTime__c = thisDateTime,
                 Priority__c = priority,
                 Purchase__c = purchase
         );
+
+        System.debug(thisTodo);
+
         insert thisTodo;
         return thisTodo.Id;
     }
