@@ -17,29 +17,24 @@ global with sharing class TodoManager {
             String purchase,
             String status) {
 
-        String checkThisDateTime = String.valueOfGmt(thisDateTime);
-
-        if (CHECK_DATE.equalsIgnoreCase(checkThisDateTime)) {
-            thisDateTime = null;
-        }
-
-        if (CHECK_NULL.equalsIgnoreCase(comments)) {
-            comments = null;
-        }
-
-        if (CHECK_NULL.equalsIgnoreCase(purchase)) {
-            purchase = null;
-        }
-
         Todo__c thisTodo = new Todo__c(
                 Name = name,
-                Comments__c = comments,
-                DateTime__c = thisDateTime,
+                Comments__c = isEmpty(CHECK_NULL, comments),
+                DateTime__c = isEmptyDateTime(CHECK_DATE, thisDateTime),
                 Priority__c = priority,
-                Purchase__c = purchase,
+                Purchase__c = isEmpty(CHECK_NULL, purchase),
                 Status__c = status);
 
         insert thisTodo;
         return thisTodo.Id;
+    }
+
+    private static String isEmpty(String entityFinal, String checkEntity) {
+        return checkEntity = checkEntity.equalsIgnoreCase(entityFinal) ? checkEntity = null : checkEntity;
+    }
+
+    private static Datetime isEmptyDateTime(String entityFinal, Datetime checkEntity) {
+        String checkThisDateTime = String.valueOfGmt(checkEntity);
+        return checkEntity = checkThisDateTime.equalsIgnoreCase(entityFinal) ? checkEntity = null : checkEntity;
     }
 }
