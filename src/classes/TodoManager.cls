@@ -10,6 +10,7 @@ global with sharing class TodoManager {
 
     @HttpPost
     global static Id createTodo(
+            String id,
             String name,
             String comments,
             Datetime thisDateTime,
@@ -23,8 +24,8 @@ global with sharing class TodoManager {
                 DateTime__c = isEmptyDateTime(CHECK_DATE, thisDateTime),
                 Priority__c = priority,
                 Purchase__c = isEmpty(CHECK_NULL, purchase),
+                External_Id__c = id,
                 Status__c = status);
-
         insert thisTodo;
         return thisTodo.Id;
     }
@@ -35,7 +36,7 @@ global with sharing class TodoManager {
         String todoId = request.requestURI.substring(
                 request.requestURI.lastIndexOf('/') + 1
         );
-        Todo__c thisTodo = [SELECT Id, External_Id__c FROM Todo__c WHERE External_Id__c = :todoId];
+        Todo__c thisTodo = [SELECT Id FROM Todo__c WHERE External_Id__c = :todoId];
         delete thisTodo;
     }
 
