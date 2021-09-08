@@ -9,7 +9,7 @@ global with sharing class TodoManager {
     private static final String CHECK_NULL = 'null';
 
     @HttpPost
-    global static Id CreateTodo(
+    global static Id createTodo(
             String name,
             String comments,
             Datetime thisDateTime,
@@ -27,6 +27,16 @@ global with sharing class TodoManager {
 
         insert thisTodo;
         return thisTodo.Id;
+    }
+
+    @HttpDelete
+    global static void deleteTodo() {
+        RestRequest request = RestContext.request;
+        String todoId = request.requestURI.substring(
+                request.requestURI.lastIndexOf('/') + 1
+        );
+        Todo__c thisTodo = [SELECT Id FROM Todo__c WHERE Id = :todoId];
+        delete thisTodo;
     }
 
     private static String isEmpty(String entityFinal, String checkEntity) {
