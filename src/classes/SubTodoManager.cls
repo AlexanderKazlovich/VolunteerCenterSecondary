@@ -3,7 +3,7 @@
  */
 
 @RestResource(UrlMapping='/Sub_Todo__c/*')
-global with sharing class SubTodoManager {
+global class SubTodoManager {
 
     private static final String CHECK_NULL = 'null';
 
@@ -13,14 +13,20 @@ global with sharing class SubTodoManager {
             String name,
             String purchase,
             String comments,
-            Boolean isCompleted) {
+            Boolean isCompleted,
+            String todoId
+    ) {
 
         Sub_Todo__c thisSubTodo = new Sub_Todo__c(
                 Name = name,
                 Purchase__c = isEmpty(CHECK_NULL, purchase),
                 Comments__c = isEmpty(CHECK_NULL, comments),
                 isCompleted__c = isCompleted,
-                External_Id__c = id);
+                External_Id__c = id,
+                Todo__c = isNullId(todoId)
+        );
+
+        System.debug(thisSubTodo);
 
         insert thisSubTodo;
         return thisSubTodo.Id;
@@ -30,4 +36,12 @@ global with sharing class SubTodoManager {
         return checkEntity = checkEntity.equalsIgnoreCase(entityFinal) ? checkEntity = null : checkEntity;
     }
 
+    private static String isNullId(String id) {
+        if (String.isEmpty(isEmpty(CHECK_NULL, id))) {
+            return null;
+        } else {
+            Todo__c thisTodoId = [SELECT Id FROM Todo__c WHERE External_Id__c = :id];
+            return  thisTodoId.Id;
+        }
+    }
 }
