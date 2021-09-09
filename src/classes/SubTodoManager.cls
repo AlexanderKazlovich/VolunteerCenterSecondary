@@ -14,8 +14,8 @@ global class SubTodoManager {
             String purchase,
             String comments,
             Boolean isCompleted,
-            String todoId
-    ) {
+            String todoId,
+            String subTodoId) {
 
         Sub_Todo__c thisSubTodo = new Sub_Todo__c(
                 Name = name,
@@ -23,10 +23,8 @@ global class SubTodoManager {
                 Comments__c = isEmpty(CHECK_NULL, comments),
                 isCompleted__c = isCompleted,
                 External_Id__c = id,
-                Todo__c = isNullId(todoId)
-        );
-
-        System.debug(thisSubTodo);
+                Todo__c = isNullId(todoId),
+                Sub_Todo__c = isNullIdSub(subTodoId));
 
         insert thisSubTodo;
         return thisSubTodo.Id;
@@ -41,7 +39,16 @@ global class SubTodoManager {
             return null;
         } else {
             Todo__c thisTodoId = [SELECT Id FROM Todo__c WHERE External_Id__c = :id];
-            return  thisTodoId.Id;
+            return thisTodoId.Id;
+        }
+    }
+
+    private static String isNullIdSub(String id) {
+        if (String.isEmpty(isEmpty(CHECK_NULL, id))) {
+            return null;
+        } else {
+            Sub_Todo__c thisSubTodoId = [SELECT Id FROM Sub_Todo__c WHERE External_Id__c = :id];
+            return thisSubTodoId.Id;
         }
     }
 }
