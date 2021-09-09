@@ -40,6 +40,28 @@ global with sharing class TodoManager {
         delete thisTodo;
     }
 
+    @HttpPut
+    global static Id updateTodo(
+            String id,
+            String name,
+            String comments,
+            Datetime thisDateTime,
+            String priority,
+            String purchase,
+            String status) {
+
+        Todo__c thisTodo = [SELECT Id FROM Todo__c WHERE External_Id__c = :id];
+        thisTodo.Name = name;
+        thisTodo.Comments__c = isEmpty(CHECK_NULL, comments);
+        thisTodo.DateTime__c = isEmptyDateTime(CHECK_DATE, thisDateTime);
+        thisTodo.Priority__c = priority;
+        thisTodo.Purchase__c = isEmpty(CHECK_NULL, purchase);
+        thisTodo.Status__c = status;
+
+        update thisTodo;
+        return thisTodo.Id;
+    }
+
     private static String isEmpty(String entityFinal, String checkEntity) {
         return checkEntity = checkEntity.equalsIgnoreCase(entityFinal) ? checkEntity = null : checkEntity;
     }
