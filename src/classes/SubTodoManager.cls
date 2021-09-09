@@ -30,6 +30,16 @@ global class SubTodoManager {
         return thisSubTodo.Id;
     }
 
+    @HttpDelete
+    global static void deleteSubTodo() {
+        RestRequest request = RestContext.request;
+        String subTodoId = request.requestURI.substring(
+                request.requestURI.lastIndexOf('/') + 1
+        );
+        Sub_Todo__c thisSubTodo = [SELECT Id FROM Sub_Todo__c WHERE External_Id__c = :subTodoId];
+        delete thisSubTodo;
+    }
+
     private static String isEmpty(String entityFinal, String checkEntity) {
         return checkEntity = checkEntity.equalsIgnoreCase(entityFinal) ? checkEntity = null : checkEntity;
     }
