@@ -80,6 +80,16 @@ global with sharing class AccountManager {
         return thisAccount.Id;
     }
 
+    @HttpDelete
+    global static void deleteAccount() {
+        RestRequest request = RestContext.request;
+        String accountId = request.requestURI.substring(
+                request.requestURI.lastIndexOf('/') + 1
+        );
+        Account thisAccount = [SELECT Id FROM Account WHERE External_Id__c = :accountId];
+        delete thisAccount;
+    }
+
     private static String thisRecordType(String thisRecordTypeId) {
         return thisRecordTypeId.equalsIgnoreCase(RECORD_TYPE_COMPANY_FIRST_ORG) ? RECORD_TYPE_COMPANY_SECOND_ORG : RECORD_TYPE_VOLUNTEER_SECOND_ORG;
     }
