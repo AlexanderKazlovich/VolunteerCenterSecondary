@@ -11,6 +11,7 @@ global with sharing class TodoManager {
     @HttpPost
     global static Id createTodo(
             String id,
+            String accountId,
             String name,
             String comments,
             Datetime thisDateTime,
@@ -20,6 +21,7 @@ global with sharing class TodoManager {
 
         Todo__c thisTodo = new Todo__c(
                 Name = name,
+                Account__c = thisAccountId(accountId),
                 Comments__c = isEmpty(comments),
                 DateTime__c = isEmptyDateTime(thisDateTime),
                 Priority__c = priority,
@@ -43,6 +45,7 @@ global with sharing class TodoManager {
     @HttpPut
     global static Id updateTodo(
             String id,
+            String accountId,
             String name,
             String comments,
             Datetime thisDateTime,
@@ -52,6 +55,7 @@ global with sharing class TodoManager {
 
         Todo__c thisTodo = [SELECT Id FROM Todo__c WHERE External_Id__c = :id];
         thisTodo.Name = name;
+        thisTodo.Account__c = thisAccountId(accountId);
         thisTodo.Comments__c = isEmpty(comments);
         thisTodo.DateTime__c = isEmptyDateTime(thisDateTime);
         thisTodo.Priority__c = priority;
@@ -69,5 +73,14 @@ global with sharing class TodoManager {
     private static Datetime isEmptyDateTime(Datetime checkEntity) {
         String checkThisDateTime = String.valueOfGmt(checkEntity);
         return checkEntity = checkThisDateTime.equalsIgnoreCase(CHECK_DATE) ? checkEntity = null : checkEntity;
+    }
+
+    private static String thisAccountId(String id) {
+        if (String.isEmpty(isEmpty(id))) {
+            return null;
+        } else {
+            Account accountId = [SELECT Id FROM Account WHERE External_Id__c = :id];
+            return accountId.Id;
+        }
     }
 }

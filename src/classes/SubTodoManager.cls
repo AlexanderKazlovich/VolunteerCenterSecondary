@@ -24,7 +24,7 @@ global class SubTodoManager {
                 isCompleted__c = isCompleted,
                 External_Id__c = id,
                 Todo__c = isNullId(todoId),
-                Sub_Todo__c = isNullIdSub(subTodoId));
+                Sub_Todo__c = thisSubTodoId(subTodoId));
 
         insert thisSubTodo;
         return thisSubTodo.Id;
@@ -56,7 +56,7 @@ global class SubTodoManager {
         thisSubTodo.Comments__c = isEmpty(comments);
         thisSubTodo.isCompleted__c = isCompleted;
         thisSubTodo.Todo__c = isNullId(todoId);
-        thisSubTodo.Sub_Todo__c = isNullIdSub(subTodoId);
+        thisSubTodo.Sub_Todo__c = thisSubTodoId(subTodoId);
 
         update thisSubTodo;
         return thisSubTodo.Id;
@@ -75,7 +75,7 @@ global class SubTodoManager {
         }
     }
 
-    private static String isNullIdSub(String id) {
+    private static String thisSubTodoId(String id) {
         if (String.isEmpty(isEmpty(id))) {
             return null;
         } else {
