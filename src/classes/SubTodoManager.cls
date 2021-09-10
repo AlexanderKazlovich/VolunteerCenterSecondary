@@ -40,6 +40,28 @@ global class SubTodoManager {
         delete thisSubTodo;
     }
 
+    @HttpPut
+    global static Id updateSubTodo(
+            String id,
+            String name,
+            String purchase,
+            String comments,
+            Boolean isCompleted,
+            String todoId,
+            String subTodoId) {
+
+        Sub_Todo__c thisSubTodo = [SELECT Id FROM Sub_Todo__c WHERE External_Id__c = :id];
+                thisSubTodo.Name = name;
+                thisSubTodo.Purchase__c = isEmpty(CHECK_NULL, purchase);
+                thisSubTodo.Comments__c = isEmpty(CHECK_NULL, comments);
+                thisSubTodo.isCompleted__c = isCompleted;
+                thisSubTodo.Todo__c = isNullId(todoId);
+                thisSubTodo.Sub_Todo__c = isNullIdSub(subTodoId);
+
+        update thisSubTodo;
+        return thisSubTodo.Id;
+    }
+
     private static String isEmpty(String entityFinal, String checkEntity) {
         return checkEntity = checkEntity.equalsIgnoreCase(entityFinal) ? checkEntity = null : checkEntity;
     }
