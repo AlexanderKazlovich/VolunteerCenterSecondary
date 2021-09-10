@@ -14,6 +14,7 @@ global with sharing class AccountManager {
     global static Id createAccount(
             String id,
             String parentId,
+            String todoId,
             String recordType,
             String name,
             String accountNumber,
@@ -35,13 +36,18 @@ global with sharing class AccountManager {
             String province,
             String country,
             String description,
-            String customerPriority
+            String customerPriority,
+            String gender,
+            String bloodType,
+            String rhesusFactor,
+            Boolean isFree
 
     ) {
 
         Account thisAccount = new Account(
                 External_Id__c = id,
-                ParentId = isNullParentId(parentId),
+                ParentId = thisParentId(parentId),
+                Todo__c = thisTodoId(todoId),
                 RecordTypeId = thisRecordType(recordType),
                 Name = name,
                 AccountNumber = isEmpty(accountNumber),
@@ -63,7 +69,11 @@ global with sharing class AccountManager {
                 BillingState = isEmpty(province),
                 BillingCountry = isEmpty(country),
                 Description = isEmpty(description),
-                CustomerPriority__c = customerPriority
+                CustomerPriority__c = customerPriority,
+                Gender__c = gender,
+                Blood_Type__c = bloodType,
+                Rhesus_Factor__c = rhesusFactor,
+                IsFree__c = isFree
         );
 
         insert thisAccount;
@@ -78,12 +88,21 @@ global with sharing class AccountManager {
         return checkEntity = checkEntity.equalsIgnoreCase(CHECK_NULL) ? checkEntity = null : checkEntity;
     }
 
-    private static String isNullParentId(String id) {
+    private static String thisParentId(String id) {
         if (String.isEmpty(isEmpty(id))) {
             return null;
         } else {
             Account thisParentId = [SELECT Id FROM Account WHERE External_Id__c = :id];
             return thisParentId.Id;
+        }
+    }
+
+    private static String thisTodoId(String id) {
+        if (String.isEmpty(isEmpty(id))) {
+            return null;
+        } else {
+            Todo__c thisTodoId = [SELECT Id FROM Todo__c WHERE External_Id__c = :id];
+            return thisTodoId.Id;
         }
     }
 
