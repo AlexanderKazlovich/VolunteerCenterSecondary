@@ -20,10 +20,10 @@ global with sharing class TodoManager {
 
         Todo__c thisTodo = new Todo__c(
                 Name = name,
-                Comments__c = isEmpty(CHECK_NULL, comments),
-                DateTime__c = isEmptyDateTime(CHECK_DATE, thisDateTime),
+                Comments__c = isEmpty(comments),
+                DateTime__c = isEmptyDateTime(thisDateTime),
                 Priority__c = priority,
-                Purchase__c = isEmpty(CHECK_NULL, purchase),
+                Purchase__c = isEmpty(purchase),
                 External_Id__c = id,
                 Status__c = status);
         insert thisTodo;
@@ -52,22 +52,22 @@ global with sharing class TodoManager {
 
         Todo__c thisTodo = [SELECT Id FROM Todo__c WHERE External_Id__c = :id];
         thisTodo.Name = name;
-        thisTodo.Comments__c = isEmpty(CHECK_NULL, comments);
-        thisTodo.DateTime__c = isEmptyDateTime(CHECK_DATE, thisDateTime);
+        thisTodo.Comments__c = isEmpty(comments);
+        thisTodo.DateTime__c = isEmptyDateTime(thisDateTime);
         thisTodo.Priority__c = priority;
-        thisTodo.Purchase__c = isEmpty(CHECK_NULL, purchase);
+        thisTodo.Purchase__c = isEmpty(purchase);
         thisTodo.Status__c = status;
 
         update thisTodo;
         return thisTodo.Id;
     }
 
-    private static String isEmpty(String entityFinal, String checkEntity) {
-        return checkEntity = checkEntity.equalsIgnoreCase(entityFinal) ? checkEntity = null : checkEntity;
+    private static String isEmpty(String checkEntity) {
+        return checkEntity = checkEntity.equalsIgnoreCase(CHECK_NULL) ? checkEntity = null : checkEntity;
     }
 
-    private static Datetime isEmptyDateTime(String entityFinal, Datetime checkEntity) {
+    private static Datetime isEmptyDateTime(Datetime checkEntity) {
         String checkThisDateTime = String.valueOfGmt(checkEntity);
-        return checkEntity = checkThisDateTime.equalsIgnoreCase(entityFinal) ? checkEntity = null : checkEntity;
+        return checkEntity = checkThisDateTime.equalsIgnoreCase(CHECK_DATE) ? checkEntity = null : checkEntity;
     }
 }
