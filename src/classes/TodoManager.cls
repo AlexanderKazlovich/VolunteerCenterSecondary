@@ -38,8 +38,14 @@ global with sharing class TodoManager {
         String todoId = request.requestURI.substring(
                 request.requestURI.lastIndexOf('/') + 1
         );
-        Todo__c thisTodo = [SELECT Id FROM Todo__c WHERE External_Id__c = :todoId];
-        delete thisTodo;
+        List<Todo__c> thisTodos = [SELECT Id FROM Todo__c WHERE External_Id__c = :todoId];
+        if (thisTodos.isEmpty()) {
+            Todo__c thisTodo = [SELECT Id FROM Todo__c WHERE Id = :todoId];
+            delete thisTodo;
+        } else {
+            System.debug(thisTodos);
+            delete thisTodos;
+        }
     }
 
     @HttpPut

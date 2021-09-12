@@ -27,8 +27,7 @@ global with sharing class ContactManager {
             String postalCode,
             String state,
             String country,
-            String description
-    ) {
+            String description) {
 
         Contact thisContact = new Contact(
                 External_Id__c = id,
@@ -48,8 +47,7 @@ global with sharing class ContactManager {
                 MailingPostalCode = isEmpty(postalCode),
                 MailingState = isEmpty(state),
                 MailingCountry = isEmpty(country),
-                Description = isEmpty(description)
-        );
+                Description = isEmpty(description));
 
         insert thisContact;
         return thisContact.Id;
@@ -84,8 +82,7 @@ global with sharing class ContactManager {
             String postalCode,
             String state,
             String country,
-            String description
-    ) {
+            String description) {
 
         Contact thisContact = [SELECT Id FROM Contact WHERE External_Id__c = :id];
 

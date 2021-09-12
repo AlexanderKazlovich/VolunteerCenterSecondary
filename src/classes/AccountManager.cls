@@ -40,9 +40,7 @@ global with sharing class AccountManager {
             String gender,
             String bloodType,
             String rhesusFactor,
-            Boolean isFree
-
-    ) {
+            Boolean isFree) {
 
         Account thisAccount = new Account(
                 External_Id__c = id,
@@ -73,8 +71,7 @@ global with sharing class AccountManager {
                 Gender__c = gender,
                 Blood_Type__c = bloodType,
                 Rhesus_Factor__c = rhesusFactor,
-                IsFree__c = isFree
-        );
+                IsFree__c = isFree);
 
         insert thisAccount;
         return thisAccount.Id;
@@ -120,9 +117,7 @@ global with sharing class AccountManager {
             String gender,
             String bloodType,
             String rhesusFactor,
-            Boolean isFree
-
-    ) {
+            Boolean isFree) {
 
         Account thisAccount = [SELECT Id FROM Account WHERE External_Id__c = :id];
 
@@ -184,5 +179,4 @@ global with sharing class AccountManager {
             return thisTodoId.Id;
         }
     }
-
 }
