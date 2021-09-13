@@ -8,6 +8,7 @@ public class SubTodoTriggerHelper {
         for (Sub_Todo__c subTodo : newList) {
             SubTodoCallouts.makePostCallout(
                     subTodo.Id,
+                    subTodo.External_Id__c,
                     subTodo.Name,
                     subTodo.Purchase__c,
                     subTodo.Comments__c,

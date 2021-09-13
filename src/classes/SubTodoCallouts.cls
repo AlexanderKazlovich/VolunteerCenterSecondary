@@ -11,6 +11,7 @@ public class SubTodoCallouts {
     @Future(Callout=true)
     public static void makePostCallout(
             String id,
+            String externalId,
             String name,
             String purchase,
             String comments,
@@ -18,14 +19,17 @@ public class SubTodoCallouts {
             String todoId,
             String subTodoId) {
 
+
+        System.debug(thisSubTodoId(subTodoId));
+
         String populateBody = '{' +
                 '"id":"' + id + '", ' +
                 '"name":"' + name + '", ' +
                 '"purchase" : "' + purchase + '", ' +
                 '"comments":"' + comments + '", ' +
                 '"isCompleted" : ' + isCompleted + ', ' +
-                '"todoId" : "' + todoId + '", ' +
-                '"subTodoId" : "' + subTodoId + '"}';
+                '"todoId" : "' + thisTodoId(todoId) + '", ' +
+                '"subTodoId" : "' + thisSubTodoId(subTodoId) + '"}';
         request.setEndpoint(ENDPOINT);
         request.setMethod('POST');
         request.setHeader('Content-Type', 'application/json;charset=UTF-8');
@@ -75,8 +79,8 @@ public class SubTodoCallouts {
                 '"purchase" : "' + purchase + '", ' +
                 '"comments":"' + comments + '", ' +
                 '"isCompleted" : ' + isCompleted + ', ' +
-                '"todoId" : "' + todoId + '", ' +
-                '"subTodoId" : "' + subTodoId + '"}';
+                '"todoId" : "' + thisTodoId(todoId) + '", ' +
+                '"subTodoId" : "' + thisSubTodoId(subTodoId) + '"}';
         request.setEndpoint(ENDPOINT);
         request.setMethod('PUT');
         request.setHeader('Content-Type', 'application/json;charset=UTF-8');
@@ -87,6 +91,32 @@ public class SubTodoCallouts {
                     response.getStatusCode() + ' ' + response.getStatus());
         } else {
             System.debug('The SubTodo is successful created with Id ' + response.getBody());
+        }
+    }
+
+    private static String thisSubTodoId(String id) {
+        if (String.isEmpty(id)) {
+            return null;
+        } else {
+            Sub_Todo__c thisSubTodo = [SELECT Id, External_Id__c FROM Sub_Todo__c WHERE Id = :id];
+            if (String.isNotEmpty(thisSubTodo.Id) && String.isNotEmpty(thisSubTodo.External_Id__c)) {
+                return thisSubTodo.External_Id__c;
+            } else {
+                return thisSubTodo.Id;
+            }
+        }
+    }
+
+    private static String thisTodoId(String id) {
+        if (String.isEmpty(id)) {
+            return null;
+        } else {
+            Todo__c thisTodo = [SELECT Id, External_Id__c FROM Todo__c WHERE Id = :id];
+            if (String.isNotEmpty(thisTodo.Id) && String.isNotEmpty(thisTodo.External_Id__c)) {
+                return thisTodo.External_Id__c;
+            } else {
+                return thisTodo.Id;
+            }
         }
     }
 }

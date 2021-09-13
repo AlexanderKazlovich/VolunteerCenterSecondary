@@ -19,15 +19,26 @@ public with sharing class TodoCallouts {
             String purchase,
             String status) {
 
+//        System.debug(accountId);
+//        Account account = [SELECT Id, External_Id__c FROM Account WHERE Id = :accountId];
+//        System.debug('id' + account.Id);
+//        System.debug('external' + account.External_Id__c);
+//        if (String.isNotEmpty(account.Id) && String.isNotEmpty(account.External_Id__c)) {
+//            accountId = account.External_Id__c;
+//        }
+//        System.debug(accountId);
+
         String populateBody = '{' +
                 '"id":"' + id + '", ' +
-                '"accountId":"' + accountId + '", ' +
+                '"accountId":"' + thisAccountId(accountId) + '", ' +
                 '"name":"' + name + '", ' +
                 '"comments":"' + comments + '", ' +
                 '"thisDateTime" : ' + handleDateTime(thisDateTime) + ', ' +
                 '"priority" : "' + isEmpty(priority) + '", ' +
                 '"purchase" : "' + purchase + '", ' +
                 '"status" : "' + isEmpty(status) + '" }';
+
+
 
         request.setEndpoint(ENDPOINT);
         request.setMethod('POST');
@@ -72,19 +83,34 @@ public with sharing class TodoCallouts {
             String purchase,
             String status) {
 
-        System.debug(accountId);
+//        System.debug(accountId);
+//        System.debug('externalId' + externalId);
+//        Account accountIdToSecond2 = [SELECT Id, External_Id__c FROM Account WHERE Id = :accountId];
+//        accountId = accountIdToSecond2.External_Id__c;
+//        System.debug('externalAfter' + accountIdToSecond2);
 
-        if (String.isNotEmpty(id) && String.isNotEmpty(externalId)) {
-            Account accountIdToSecond = [SELECT Id, External_Id__c FROM Account WHERE Id = :accountId];
-            accountId = accountIdToSecond.External_Id__c;
-        }
+//        if (String.isNotEmpty(id) && String.isNotEmpty(externalId)) {
+//            Account accountIdToSecond = [SELECT Id, External_Id__c FROM Account WHERE Id = :accountId];
+//            accountId = accountIdToSecond.External_Id__c;
+//            System.debug('done');
+//            System.debug('external' + accountId);
+//        }
 
-        System.debug(accountId);
+//        System.debug(accountId);
+//        Account account = [SELECT Id, External_Id__c FROM Account WHERE Id = :accountId];
+//        System.debug('id' + account.Id);
+//        System.debug('external' + account.External_Id__c);
+//        if (String.isNotEmpty(account.Id) && String.isNotEmpty(account.External_Id__c)) {
+//            accountId = account.External_Id__c;
+//        }
+//        System.debug(accountId);
+//
+//        System.debug(accountId);
 
         String populateBody = '{' +
                 '"id":"' + id + '", ' +
                 '"externalId":"' + externalId + '", ' +
-                '"accountId":"' + accountId + '", ' +
+                '"accountId":"' + thisAccountId(accountId) + '", ' +
                 '"name":"' + name + '", ' +
                 '"comments":"' + comments + '", ' +
                 '"thisDateTime" : ' + handleDateTime(thisDateTime) + ', ' +
@@ -127,5 +153,18 @@ public with sharing class TodoCallouts {
 
         return checked = String.isBlank(checked) ? checked = '' : checked;
 
+    }
+
+    private static String thisAccountId(String id) {
+        if (String.isEmpty(id)) {
+            return null;
+        } else {
+            Account account = [SELECT Id, External_Id__c FROM Account WHERE Id = :id];
+            if (String.isNotEmpty(account.Id) && String.isNotEmpty(account.External_Id__c)) {
+                return account.External_Id__c;
+            } else {
+                return account.Id;
+            }
+        }
     }
 }
