@@ -121,7 +121,6 @@ global with sharing class AccountManager {
 
         Account thisAccount = [SELECT Id FROM Account WHERE External_Id__c = :id];
 
-
         thisAccount.ParentId = thisParentId(parentId);
         thisAccount.Todo__c = thisTodoId(todoId);
         thisAccount.Name = name;

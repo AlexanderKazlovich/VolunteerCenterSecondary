@@ -36,13 +36,19 @@ global class SubTodoManager {
         String subTodoId = request.requestURI.substring(
                 request.requestURI.lastIndexOf('/') + 1
         );
-        Sub_Todo__c thisSubTodo = [SELECT Id FROM Sub_Todo__c WHERE External_Id__c = :subTodoId];
-        delete thisSubTodo;
+        List<Sub_Todo__c> thisSubTodos = [SELECT Id FROM Sub_Todo__c WHERE External_Id__c = :subTodoId];
+        if (thisSubTodos.isEmpty()) {
+            Todo__c thisTodo = [SELECT Id FROM Todo__c WHERE Id = :subTodoId];
+            delete thisSubTodos;
+        } else {
+            delete thisSubTodos;
+        }
     }
 
     @HttpPut
     global static Id updateSubTodo(
             String id,
+            String externalId,
             String name,
             String purchase,
             String comments,
@@ -50,16 +56,27 @@ global class SubTodoManager {
             String todoId,
             String subTodoId) {
 
-        Sub_Todo__c thisSubTodo = [SELECT Id FROM Sub_Todo__c WHERE External_Id__c = :id];
-        thisSubTodo.Name = name;
-        thisSubTodo.Purchase__c = isEmpty(purchase);
-        thisSubTodo.Comments__c = isEmpty(comments);
-        thisSubTodo.isCompleted__c = isCompleted;
-        thisSubTodo.Todo__c = isNullId(todoId);
-        thisSubTodo.Sub_Todo__c = thisSubTodoId(subTodoId);
-
-        update thisSubTodo;
-        return thisSubTodo.Id;
+        List<Sub_Todo__c> thisSubTodos = [SELECT Id FROM Sub_Todo__c WHERE External_Id__c = :id];
+        if (thisSubTodos.isEmpty()) {
+            Sub_Todo__c thisSubTodo = [SELECT Id FROM Sub_Todo__c WHERE Id = :externalId];
+            thisSubTodo.Name = name;
+            thisSubTodo.Purchase__c = isEmpty(purchase);
+            thisSubTodo.Comments__c = isEmpty(comments);
+            thisSubTodo.isCompleted__c = isCompleted;
+            thisSubTodo.Todo__c = isNullId(todoId);
+            thisSubTodo.Sub_Todo__c = thisSubTodoId(subTodoId);
+            update thisSubTodo;
+            return thisSubTodo.Id;
+        } else {
+            thisSubTodos[0].Name = name;
+            thisSubTodos[0].Purchase__c = isEmpty(purchase);
+            thisSubTodos[0].Comments__c = isEmpty(comments);
+            thisSubTodos[0].isCompleted__c = isCompleted;
+            thisSubTodos[0].Todo__c = isNullId(todoId);
+            thisSubTodos[0].Sub_Todo__c = thisSubTodoId(subTodoId);
+            update thisSubTodos[0];
+            return thisSubTodos[0].Id;
+        }
     }
 
     private static String isEmpty(String checkEntity) {

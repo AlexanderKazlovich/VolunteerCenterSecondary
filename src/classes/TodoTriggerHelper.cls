@@ -4,6 +4,7 @@
 
 public with sharing class TodoTriggerHelper {
 
+
     public static void makeCallouts(List<Todo__c> newList) {
         for (Todo__c todo : newList) {
             TodoCallouts.makePostCallout(
@@ -31,6 +32,7 @@ public with sharing class TodoTriggerHelper {
         for (Todo__c todo: newList) {
             TodoCallouts.makePutCallout(
                     todo.Id,
+                    todo.External_Id__c,
                     todo.Account__c,
                     todo.Name,
                     todo.Comments__c,
