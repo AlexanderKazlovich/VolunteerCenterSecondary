@@ -5,18 +5,6 @@
 @RestResource(UrlMapping='/Todo__c/*')
 global with sharing class TodoManager {
 
-//    private static final String RECORD_TYPE_EMERGENCY_FIRST_ORG = '0125g000000mGqOAAU';
-//    private static final String RECORD_TYPE_EMERGENCY_SECOND_ORG = '0125g000000ugqNAAQ';
-//    private static final String RECORD_TYPE_FINDING_FIRST_ORG = '0125g000000mGqEAAU';
-//    private static final String RECORD_TYPE_FINDING_SECOND_ORG = '0125g000000ugqSAAQ';
-//    private static final String RECORD_TYPE_NURSING_FIRST_ORG = '0125g000000mGq9AAE';
-//    private static final String RECORD_TYPE_NURSING_SECOND_ORG = '0125g000000ugqXAAQ';
-//    private static final String RECORD_TYPE_ORPHANS_FIRST_ORG = '0125g000000mGq4AAE';
-//    private static final String RECORD_TYPE_ORPHANS_SECOND_ORG = '0125g000000ugqcAAA';
-//    private static final String RECORD_TYPE_PHYSICAL_FIRST_ORG = '0125g000000mGpzAAE';
-//    private static final String RECORD_TYPE_PHYSICAL_SECOND_ORG = '0125g000000ugqhAAA';
-//    private static final String RECORD_TYPE_ANIMALS_FIRST_ORG = '0125g000000mGqJAAU';
-//    private static final String RECORD_TYPE_ANIMALS_SECOND_ORG = '0125g000000ugqmAAA';
     private static final String CHECK_DATE = '1921-01-01 00:00:00';
     private static final String CHECK_NULL = 'null';
 
@@ -24,7 +12,7 @@ global with sharing class TodoManager {
     global static Id createTodo(
             String id,
             String accountId,
-//            String recordType,
+            String recordTypeName,
             String name,
             String comments,
             Datetime thisDateTime,
@@ -35,13 +23,14 @@ global with sharing class TodoManager {
         Todo__c thisTodo = new Todo__c(
                 Name = name,
                 Account__c = thisAccountId(accountId),
-//                RecordTypeId =
+                RecordTypeId = thisRecordType(recordTypeName),
                 Comments__c = isEmpty(comments),
                 DateTime__c = isEmptyDateTime(thisDateTime),
                 Priority__c = priority,
                 Purchase__c = isEmpty(purchase),
                 External_Id__c = id,
                 Status__c = status);
+
         insert thisTodo;
         return thisTodo.Id;
     }
@@ -99,10 +88,6 @@ global with sharing class TodoManager {
         }
     }
 
-//    private static String thisRecordType(String thisRecordTypeId) {
-//        return thisRecordTypeId.equalsIgnoreCase(RECORD_TYPE_COMPANY_FIRST_ORG) ? RECORD_TYPE_COMPANY_SECOND_ORG : RECORD_TYPE_VOLUNTEER_SECOND_ORG;
-//    }
-
     private static String isEmpty(String checkEntity) {
         return checkEntity = checkEntity.equalsIgnoreCase(CHECK_NULL) ? checkEntity = null : checkEntity;
     }
@@ -124,5 +109,10 @@ global with sharing class TodoManager {
                 return accountsId[0].Id;
             }
         }
+    }
+
+    private static String thisRecordType(String recordType) {
+        RecordType thisRecordType  = [SELECT Id FROM RecordType WHERE RecordType.Name = :recordType];
+        return thisRecordType.Id;
     }
 }
