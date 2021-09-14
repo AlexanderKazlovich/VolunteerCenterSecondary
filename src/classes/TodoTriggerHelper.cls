@@ -4,6 +4,29 @@
 
 public with sharing class TodoTriggerHelper {
 
+    public static void assignTodoOnQueue(List<Todo__c> newList) {
+        for (Todo__c todo : newList) {
+            String recordTypeName = Schema.SObjectType.Todo__c.getRecordTypeInfosById().get(todo.RecordTypeId).getDeveloperName();
+            if (recordTypeName == 'Emergency_Assistance') {
+                todo.OwnerId = getQueueId(recordTypeName);
+            } else if (recordTypeName == 'Finding_People') {
+                todo.OwnerId = getQueueId(recordTypeName);
+            } else if (recordTypeName == 'Nursing_Home') {
+                todo.OwnerId = getQueueId(recordTypeName);
+            } else if (recordTypeName == 'Orphans_Home') {
+                todo.OwnerId = getQueueId(recordTypeName);
+            } else if (recordTypeName == 'Physical_Help') {
+                todo.OwnerId = getQueueId(recordTypeName);
+            } else if (recordTypeName == 'Working_with_animals') {
+                todo.OwnerId = getQueueId(recordTypeName);
+            }
+        }
+    }
+
+    public static Id getQueueId(String recordTypeName) {
+        return [SELECT Id FROM Group WHERE Type='Queue' AND DeveloperName = :recordTypeName].get(0).Id;
+    }
+
 
     public static void makeCallouts(List<Todo__c> newList) {
         for (Todo__c todo : newList) {
