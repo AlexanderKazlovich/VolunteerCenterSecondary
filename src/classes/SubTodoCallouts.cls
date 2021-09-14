@@ -11,16 +11,12 @@ public class SubTodoCallouts {
     @Future(Callout=true)
     public static void makePostCallout(
             String id,
-            String externalId,
             String name,
             String purchase,
             String comments,
             Boolean isCompleted,
             String todoId,
             String subTodoId) {
-
-
-        System.debug(thisSubTodoId(subTodoId));
 
         String populateBody = '{' +
                 '"id":"' + id + '", ' +
@@ -50,7 +46,6 @@ public class SubTodoCallouts {
         } else {
             request.setEndpoint(ENDPOINT + id);
         }
-        request.setEndpoint(ENDPOINT + id);
         request.setMethod('DELETE');
         HttpResponse response = http.send(request);
         if (response.getStatusCode() == 200) {
