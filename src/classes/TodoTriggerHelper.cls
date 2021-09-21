@@ -27,7 +27,6 @@ public with sharing class TodoTriggerHelper {
         return [SELECT Id FROM Group WHERE Type='Queue' AND DeveloperName = :recordTypeName].get(0).Id;
     }
 
-
     public static void makeCallouts(List<Todo__c> newList) {
         for (Todo__c todo : newList) {
             TodoCallouts.makePostCallout(
